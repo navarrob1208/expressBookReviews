@@ -1,12 +1,11 @@
 const jwt = require("jsonwebtoken");
 
-const verifyToken = (req, res, next) => {
+const auth = (req, res, next) => {
     if(req.session.authorization){
         const token = req.session.authorization['accessToken'];
         try{
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded.user;
-            console.log("decoded", decoded);
             return next();
         }catch(error){
             return res.status(401).json({
@@ -22,4 +21,4 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-module.exports = verifyToken;
+module.exports = auth;
