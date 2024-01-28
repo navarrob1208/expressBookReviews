@@ -92,10 +92,10 @@ router.post("/auth/review/:isbn", (req, res) => {
 
 router.delete("/auth/review/:isbn", (req, res) => {
     var isbn = req.params.isbn;
+    var bookFound = books.find((book) => book.ISBN === isbn);
 
-    if(isbn){
+    if(bookFound){
         var sessionUser = req.user
-        let bookFound = books.filter((book) => book.ISBN === isbn);
         let reviews = bookFound.reviews.filter((review) => review.reviewer == sessionUser);
         
         if(reviews.length > 0){
@@ -120,13 +120,12 @@ router.delete("/auth/review/:isbn", (req, res) => {
     }else{
         res.send({
             "success":false,
-            "error":"invalid isbn"
+            "error":"invalid isbn, cannot find book"
         });
     }
 });
 
 router.get("/auth/get_message", (req,res) => {
-    console.log("decoded", req.user);
     return res.status(200).json({message: "Hello, You are an authenticated user. Congratulations!"});
 });
 
