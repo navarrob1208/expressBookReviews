@@ -2,9 +2,9 @@ const axios = require('axios').default;
 
 function getBooks(){
     return new Promise((resolve, reject) => {
-        axios.get("localhost:5000/").then((response) => {
-            return resolve(response);
-        }).catch((err)=> {
+        axios.get("http://localhost:5000/").then((response) => {
+            return resolve(JSON.stringify(response.data, null, 4));
+        }).catch((error)=> {
             return reject(error)
         })
     })
@@ -12,15 +12,15 @@ function getBooks(){
 
 function getBookByISBN(isbn){
     return new Promise(async (resolve, reject)=> {
-        try {
-            const response = await axios("localhost:5000/isbn/", {
-                params:{
-                    "isbn":isbn
-                }
-            });
-            return resolve(response);
-        } catch (error) {
-            return reject(error);
+        if(isbn){
+            try {
+                const response = await axios(`http://localhost:5000/isbn/${isbn}`);
+                return resolve(JSON.stringify(response.data, null, 4));
+            } catch (error) {
+                return reject(error);
+            }
+        }else{
+            return reject("invalid isbn");
         }
     });
 }
@@ -28,29 +28,36 @@ function getBookByISBN(isbn){
 function getBookByAuthor(author){
     return new Promise(async (resolve, reject)=> {
         try {
-            const response = await axios("localhost:5000/author/", {
+            const response = await axios(`http://localhost:5000/author/${author}`, {
                 params:{
                     "author":author
                 }
             });
-            return resolve(response);
+            return resolve(JSON.stringify(response.data, null, 4));
         } catch (error) {
             return reject(error);
         }
     });
 }
 
-function getBookByTitle(title){
+function getBooksByTitle(title){
     return new Promise(async (resolve, reject)=> {
         try {
-            const response = await axios("localhost:5000/title/", {
+            const response = await axios(`http://localhost:5000/title/${title}`, {
                 params:{
                     "title":title
                 }
             });
-            return resolve(response);
+            return resolve(JSON.stringify(response.data, null, 4));
         } catch (error) {
             return reject(error);
         }
     });
 }
+
+getBooksByTitle("Anna Karenina").then((res) => {
+    console.log(res);
+}).catch((err)=>{
+    console.log(err);
+
+});
