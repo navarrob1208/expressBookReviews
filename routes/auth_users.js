@@ -10,12 +10,12 @@ router.post("/login", (req, res, next) => {
     const {username, password} = req.body;
 
     if(!username){
-        res.send({
+        res.status(400).json({
             "success":false,
             "error":"invalid username"
         });
     }else if(!password){
-        res.send({
+        res.status(400).json({
             "success":false,
             "error":"invalid password"
         });
@@ -41,14 +41,14 @@ router.post("/login", (req, res, next) => {
                 });
             
             }else {
-                res.send({
+                res.status(401).json({
                     "success":false,
                     "error":"invalid password"
                 });
             }
 
         }else{
-            res.send({
+            res.status(400).json({
                 "success":false,
                 "error":"user not found"
             });
@@ -77,13 +77,13 @@ router.post("/auth/review/:isbn", (req, res) => {
         let allBooks = books.filter((book) => book.ISBN !== isbn);
         allBooks.push(bookFound);
 
-        res.send({
+        res.status(200).json({
             "success":true,
             "result":[bookFound],
             "error":""
         });
     }else{
-        res.send({
+        res.status(400).json({
             "success":false,
             "error":"invalid isbn/review"
         });
@@ -105,20 +105,20 @@ router.delete("/auth/review/:isbn", (req, res) => {
             let allBooks = books.filter((book) => book.ISBN !== isbn);
             allBooks.push(bookFound);
     
-            res.send({
+            res.status(200).json({
                 "success":true,
                 "result":[bookFound],
                 "error":""
             });
         }else{
-            res.send({
+            res.status(401).json({
                 "success":false,
                 "error":"you don't have reviews to delete"
             });
         }
         
     }else{
-        res.send({
+        res.status(400).json({
             "success":false,
             "error":"invalid isbn, cannot find book"
         });
