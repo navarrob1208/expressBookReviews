@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const express = require('express');
 const router = express.Router();
 
@@ -126,6 +127,57 @@ router.post("/register", (req, res, next) => {
             res.send({
                 "success":true,
                 "error":""
+            });
+        }
+    }
+});
+
+
+router.post("/login", (req, res, next) => {
+    const {username, password} = req.body;
+
+    if(!username){
+        res.send({
+            "success":false,
+            "error":"invalid username"
+        });
+    }else if(!password){
+        res.send({
+            "success":false,
+            "error":"invalid password"
+        });
+    }else {
+        let userFound = users.find((user) => user.username === username);
+        if(userFound){
+            if(userFound.password === password){
+                const token = jwt.sign({ 
+                    user: userFound.username
+                }, process.env.JWT_SECRET, { 
+                    expiresIn:'12h' 
+                });
+
+                req.session.authorization = {
+                    token, username
+                }
+                
+                return res.status(200).json({
+                    "success":true,
+                    "result":[],
+                    "token": token,
+                    "error":""
+                });
+            
+            }else {
+                res.send({
+                    "success":false,
+                    "error":"invalid password"
+                });
+            }
+
+        }else{
+            res.send({
+                "success":false,
+                "error":"user not found"
             });
         }
     }

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require("express-session");
@@ -14,8 +16,6 @@ app.use("/customer", session({
     resave:true,
     saveUninitialized:true
 }));
-
-
 
 const PORT = 5000;
 
